@@ -1,0 +1,982 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Exploring React Concepts and Patterns</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 3px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+    margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-block;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1.25em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(55, 53, 47, 1);
+}
+.highlight-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.highlight-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.highlight-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.highlight-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.highlight-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.highlight-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.highlight-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.highlight-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.highlight-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.highlight-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.highlight-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.highlight-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.highlight-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.highlight-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.highlight-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(120, 119, 116, 1);
+	fill: rgba(120, 119, 116, 1);
+}
+.block-color-brown {
+	color: rgba(159, 107, 83, 1);
+	fill: rgba(159, 107, 83, 1);
+}
+.block-color-orange {
+	color: rgba(217, 115, 13, 1);
+	fill: rgba(217, 115, 13, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 145, 47, 1);
+	fill: rgba(203, 145, 47, 1);
+}
+.block-color-teal {
+	color: rgba(68, 131, 97, 1);
+	fill: rgba(68, 131, 97, 1);
+}
+.block-color-blue {
+	color: rgba(51, 126, 169, 1);
+	fill: rgba(51, 126, 169, 1);
+}
+.block-color-purple {
+	color: rgba(144, 101, 176, 1);
+	fill: rgba(144, 101, 176, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(212, 76, 71, 1);
+	fill: rgba(212, 76, 71, 1);
+}
+.block-color-gray_background {
+	background: rgba(241, 241, 239, 1);
+}
+.block-color-brown_background {
+	background: rgba(244, 238, 238, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 236, 221, 1);
+}
+.block-color-yellow_background {
+	background: rgba(251, 243, 219, 1);
+}
+.block-color-teal_background {
+	background: rgba(237, 243, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(231, 243, 248, 1);
+}
+.block-color-purple_background {
+	background: rgba(244, 240, 247, 0.8);
+}
+.block-color-pink_background {
+	background: rgba(249, 238, 243, 0.8);
+}
+.block-color-red_background {
+	background: rgba(253, 235, 236, 1);
+}
+.select-value-color-interactiveBlue { background-color: rgba(35, 131, 226, .07); }
+.select-value-color-pink { background-color: rgba(245, 224, 233, 1); }
+.select-value-color-purple { background-color: rgba(232, 222, 238, 1); }
+.select-value-color-green { background-color: rgba(219, 237, 219, 1); }
+.select-value-color-gray { background-color: rgba(227, 226, 224, 1); }
+.select-value-color-translucentGray { background-color: rgba(255, 255, 255, 0.0375); }
+.select-value-color-orange { background-color: rgba(250, 222, 201, 1); }
+.select-value-color-brown { background-color: rgba(238, 224, 218, 1); }
+.select-value-color-red { background-color: rgba(255, 226, 221, 1); }
+.select-value-color-yellow { background-color: rgba(253, 236, 200, 1); }
+.select-value-color-blue { background-color: rgba(211, 229, 239, 1); }
+.select-value-color-pageGlass { background-color: undefined; }
+.select-value-color-washGlass { background-color: undefined; }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="1327d04f-8866-4577-8af3-daf175653336" class="page mono"><header><img class="page-cover-image" src="Exploring%20React%20Concepts%20and%20Patterns/wp4923981-react-js-wallpapers.jpg" style="object-position:center 50%"/><h1 class="page-title">Exploring React Concepts and Patterns</h1><p class="page-description"></p></header><div class="page-body"><h1 id="293288fb-a8af-413f-9c3d-171a21efd702" class="">Exploring React Concepts and Patterns in Depth</h1><p id="8514ddfc-47bf-44df-89ea-29983e4f1cce" class="">React, the popular JavaScript library for building user interfaces, offers a versatile toolkit of components to empower developers in creating dynamic web applications. In this article, we’ll explore several key React components, understand the core concepts and powerful design patterns that make React the go-to choice for building modern web applications.</p><h2 id="054e6bf9-7d6e-42f1-bd76-7a8611d5293e" class="">Types of Components</h2><ol type="1" id="4d8110f8-0f4f-492e-b397-c66b09b86c23" class="numbered-list" start="1"><li>Functional Components</li></ol><ol type="1" id="85398d9a-8f94-4d9b-a010-a5327547b8ae" class="numbered-list" start="2"><li>Class Components</li></ol><h2 id="08cbbc5f-9293-41fe-b18c-9dda21e7d8d6" class="">Additional React Concepts and Patterns</h2><ol type="1" id="d8af3225-d40f-4c09-964c-643ab2dadca7" class="numbered-list" start="1"><li>Stateless Components</li></ol><ol type="1" id="18fd29ad-8d17-4df9-8e0f-27094b659451" class="numbered-list" start="2"><li>Stateful Components</li></ol><ol type="1" id="07d62e2c-628c-4beb-9dba-e90d1c8b16ca" class="numbered-list" start="3"><li>Pure Components</li></ol><ol type="1" id="7cdd234c-feeb-4178-b07b-8b5ed790eb37" class="numbered-list" start="4"><li>Controlled Components</li></ol><ol type="1" id="02a043b3-7a17-457d-b8c4-f5507089b012" class="numbered-list" start="5"><li>Uncontrolled Components</li></ol><ol type="1" id="a1a7a5a9-5f71-4853-8b6e-640e8223c76e" class="numbered-list" start="6"><li>Semi-Controlled Components</li></ol><ol type="1" id="e7bb81f8-5584-453c-bcb8-500c57dd07a9" class="numbered-list" start="7"><li>Container Components</li></ol><ol type="1" id="464ec44b-fd17-42f5-bcda-e2260e33197b" class="numbered-list" start="8"><li>Presentational Components</li></ol><ol type="1" id="fba84177-a980-4033-9252-04802136a6a3" class="numbered-list" start="9"><li>Higher-Order Components (HOCs)</li></ol><ol type="1" id="1d4d9407-aee9-4c5c-8212-e7a25f45d3bf" class="numbered-list" start="10"><li>Error Boundaries</li></ol><ol type="1" id="33b1b32a-c06b-4f80-8cbe-dea0d201f8f1" class="numbered-list" start="11"><li>Context API Components</li></ol><ol type="1" id="71e095c6-04bb-4780-9025-135f4b01488b" class="numbered-list" start="12"><li>Router Components</li></ol><ol type="1" id="12fc9320-cc81-4d20-95b6-f3ccd855a5d0" class="numbered-list" start="13"><li>Suspense Components</li></ol><ol type="1" id="407c2423-5b44-4e6a-8643-7c13502636fd" class="numbered-list" start="14"><li>Render Props Components</li></ol><ol type="1" id="e5bb0a75-6b60-44e4-b97e-7c2ed1eb0b61" class="numbered-list" start="15"><li>Function as Children (Render Props)</li></ol><ol type="1" id="a496ab07-7bd2-425c-93ea-85842c3238c0" class="numbered-list" start="16"><li>Memoized Components</li></ol><ol type="1" id="5238fb9c-f115-42fe-ab37-9419eb0f3d1b" class="numbered-list" start="17"><li>Hooks</li></ol><ol type="1" id="22074a02-c487-4ac9-a3ae-f56d95d06e70" class="numbered-list" start="18"><li>Portals</li></ol><ol type="1" id="7d7f0c51-297b-4162-8af4-043bbac9d8c1" class="numbered-list" start="19"><li>Lazy Loading</li></ol><ol type="1" id="3ffd6156-fc75-4280-a93b-06965337cbd7" class="numbered-list" start="20"><li>Fragments</li></ol><ol type="1" id="90fde619-7e7f-44b0-81a9-58a05e8378e0" class="numbered-list" start="21"><li>Custom Hooks</li></ol><hr id="d93ae72a-0f25-4342-bb02-885ae362f06e"/><h1 id="931d7e24-bbc5-4a7a-a57e-77af6b3600a3" class="">Types of Components</h1><p id="43ea6a69-4a04-4bba-909b-1c4d97e69d93" class="">In React, components are the building blocks of your user interface. They can be categorized into different types based on their characteristics and responsibilities. Understanding these types is crucial for structuring your React applications efficiently. The types of components typically include:</p><h2 id="83f68af5-32d6-4e45-a41e-1682ea103843" class="">1. Functional Components</h2><p id="9143fd5d-a981-4142-b769-50899b5a1dc0" class="">Functional Components, often referred to as Stateless Components, are plain JavaScript functions that accept <code>props</code> as arguments and return React elements (JSX). They are primarily responsible for presenting UI elements and do not manage internal state or have lifecycle methods.</p><p id="2095d772-7f40-4d79-b678-64dcdecad6b8" class=""><strong>Example:</strong></p><pre id="b43c0056-ed36-47c3-8172-bb14d9fbff86" class="code code-wrap"><code>const Greeting = ({ name }) =&gt; {
+    return &lt;h1&gt;Hello, {name}!&lt;/h1&gt;;
+};</code></pre><p id="0b06c391-0d79-4680-986e-b8978a49a268" class=""><strong>Explanation:</strong></p><p id="ab0a7188-1c96-451b-a4d1-dc75fd55204b" class="">Functional components are pure functions that receive data (props) as input and return JSX elements as output. They focus solely on rendering UI based on the provided props and do not have their own internal state or lifecycle methods. Stateless components are simple, predictable, and easy to test.</p><p id="1c843d74-0b23-413c-9ab0-a36381a615fd" class=""><strong>Benefits:</strong></p><ul id="19b72426-b4f2-4f59-ba69-ee405f8be244" class="bulleted-list"><li style="list-style-type:disc"><strong>Simplicity:</strong> Functional components are easy to understand because they focus solely on rendering UI based on input data (props).</li></ul><ul id="11e9b2cb-9895-4ef3-87ac-d3fad33c6ffb" class="bulleted-list"><li style="list-style-type:disc"><strong>Reusability:</strong> They can be reused throughout your application, promoting code reusability.</li></ul><ul id="726cbe8e-c0d8-4ea9-8d51-5775d44f7192" class="bulleted-list"><li style="list-style-type:disc"><strong>Testing:</strong> Stateless components are straightforward to test because their behavior depends solely on props.</li></ul><p id="11fe7353-a40c-49b5-bc8b-e8cd40853669" class=""><strong>Use Cases:</strong></p><ul id="65d416eb-b86c-499c-bca4-ec3e0e6eb64a" class="bulleted-list"><li style="list-style-type:disc">Presentational components that receive data and render it.</li></ul><ul id="05cef32a-e0ff-43cf-a0db-0867e6dac106" class="bulleted-list"><li style="list-style-type:disc">UI elements such as buttons, icons, and headers that don’t require internal state management.</li></ul><hr id="8baa9f51-2475-4141-bf3f-8e06844767a2"/><h2 id="ed7cb119-5c0f-49e6-b6cd-44f5999321b6" class="">2. Class Components</h2><p id="31ab6fd6-8cb5-47f9-a12c-20d76ff7f13a" class="">Class Components in React are versatile and can be either stateful or stateless, depending on the specific implementation. They often have their own internal state and can utilize lifecycle methods for complex UI logic.</p><p id="c7165314-ae61-4ab4-9006-ae398ce6f305" class=""><strong>Example:</strong></p><pre id="5859129e-8120-4ce6-8588-cbbd2ce49b3c" class="code code-wrap"><code>class Counter extends React.Component {
+    constructor() {
+        super();
+        this.state = { count: 0 };
+    }
+
+    render() {
+        return (
+            &lt;div&gt;
+                &lt;p&gt;Count: {this.state.count}&lt;/p&gt;
+                &lt;button
+                    onClick={() =&gt;
+                        this.setState({ count: this.state.count + 1 })
+                    }&gt;
+                    Increment
+                &lt;/button&gt;
+            &lt;/div&gt;
+        );
+    }
+}</code></pre><p id="ecdd1d6b-b0dd-44d2-a9df-c671e052d87e" class=""><strong>Explanation:</strong></p><p id="9959bcdc-c8e3-4a13-b682-cc8524d61ec7" class="">Class Components in React are versatile and can serve different purposes. They can be stateful when they manage their own internal state using <code>this.state</code>, or they can be stateless when they primarily focus on rendering based on props. Stateful components can utilize lifecycle methods for various tasks, including data fetching, side effects, and more.</p><p id="ddb2a2bd-940e-4d12-9110-6a7dd0fa1ded" class=""><strong>Benefits:</strong></p><ul id="04fc17c4-72e1-41bb-8def-d7a29136e4c8" class="bulleted-list"><li style="list-style-type:disc"><strong>State Management:</strong> Stateful components are suitable for handling complex state logic, such as form data, user authentication, or real-time data updates.</li></ul><ul id="85866c65-d707-4120-9d92-f8e3d7bb3275" class="bulleted-list"><li style="list-style-type:disc"><strong>Lifecycle Control:</strong> They offer control over component lifecycle methods, allowing you to handle data fetching, animations, and cleanup.</li></ul><ul id="b1110cde-4ae4-41f9-bdf7-ad93482444b7" class="bulleted-list"><li style="list-style-type:disc"><strong>Dynamic UI:</strong> Stateful components are ideal for components with changing data or user interactions.</li></ul><p id="46c44c06-1513-48a5-995e-24d269eecd8c" class=""><strong>Use Cases:</strong></p><ul id="2a7a18b3-dbda-4225-ae9b-975b4b1172b0" class="bulleted-list"><li style="list-style-type:disc">Components that need to manage and update internal state.</li></ul><ul id="d07eb5a0-5f9f-4da6-b0ca-dd1a7dbdeede" class="bulleted-list"><li style="list-style-type:disc">Components requiring lifecycle methods.</li></ul><hr id="177aa0fa-af60-42f9-a0da-215a2095d689"/><h1 id="3164ce05-3382-4fa0-a4fe-d55500f79ff6" class="">Additional React Concepts and Patterns</h1><p id="6027850a-cc9b-4a21-a662-cd0ccadf1ae2" class="">Beyond the basic component types, React introduces various concepts and patterns that enhance the capabilities and organization of your application. These concepts and patterns include:</p><h2 id="5706ad8d-6a52-441b-990e-3f0853d61f85" class="">1. Stateless Components</h2><p id="23d33786-bea3-46be-882e-85b9a26c2c75" class="">Stateless Components are components that do not maintain their own internal state. They rely entirely on props for rendering and do not implement lifecycle methods.</p><p id="305d52f8-2272-4b7f-8c17-9cade5b857b4" class=""><strong>Example:</strong></p><pre id="a5439491-c9f7-449e-b6cd-ccb0a8b1dbbc" class="code code-wrap"><code>const Greeting = ({ name }) =&gt; &lt;p&gt;Hello, {name}!&lt;/p&gt;;</code></pre><p id="024395e8-01bb-41e3-bc4b-1a9ca858288a" class=""><strong>Explanation:</strong></p><p id="857e1748-71b9-4867-9e04-d087c70f6adf" class="">Stateless Components, are purely presentational and focus on rendering UI elements based on the provided props. They do not manage state or implement lifecycle methods.</p><p id="3e99c330-2144-4a7b-9f27-18eea4ff4a0b" class=""><strong>Benefits:</strong></p><ul id="bbadc7c8-9fbb-4b08-80d6-29dc778e0327" class="bulleted-list"><li style="list-style-type:disc"><strong>Simplicity:</strong> Stateless components are straightforward and easy to understand.</li></ul><ul id="9e451c05-aa9b-42f1-aec8-86a548daa306" class="bulleted-list"><li style="list-style-type:disc"><strong>Reusability:</strong> They can be reused throughout the application.</li></ul><ul id="bbac89c6-4293-488e-9f94-d9ad369892d4" class="bulleted-list"><li style="list-style-type:disc"><strong>Testing:</strong> Stateless components are easy to test because their behavior is determined by props.</li></ul><p id="aca7916c-11da-4357-bf53-430210fa86b3" class=""><strong>Use Cases:</strong></p><ul id="f1a87919-1d96-49bd-8353-37d5ea763872" class="bulleted-list"><li style="list-style-type:disc">Presentational components that receive data and render it.</li></ul><ul id="d359a4ae-802e-4cea-ab05-652ed81cd12a" class="bulleted-list"><li style="list-style-type:disc">UI elements such as buttons, icons, and headers.</li></ul><hr id="fef1d643-0892-49b3-a257-54400f4a04e8"/><h2 id="ddd3acec-51f3-42b9-bedb-e6df521c892d" class="">2. Stateful Components</h2><p id="8f8e63dc-1369-49ba-9114-14a315effc19" class="">Stateful Components, have the ability to maintain their own internal state. They implement lifecycle methods and handle complex logic and side effects.</p><p id="6491afa0-5f60-4fe1-a65e-b289abd6165f" class=""><strong>Example:</strong></p><pre id="5e94f65c-b8ba-4960-92d9-0eb8cbee6523" class="code code-wrap"><code>class Counter extends React.Component {
+    constructor() {
+        super();
+        this.state = { count: 0 };
+    }
+
+    increment = () =&gt; {
+        this.setState({ count: this.state.count + 1 });
+    };
+
+    render() {
+        return (
+            &lt;div&gt;
+                &lt;p&gt;Count: {this.state.count}&lt;/p&gt;
+                &lt;button onClick={this.increment}&gt;Increment&lt;/button&gt;
+            &lt;/div&gt;
+        );
+    }
+}</code></pre><p id="7ee6e179-5c16-42d9-b98f-c3c4dfe3db2a" class=""><strong>Explanation:</strong></p><p id="7f018567-8790-48d0-a566-2206f622e94d" class="">Stateful Components, implemented as class components, have the capability to manage their own state, which can change over time based on user interactions or other events. They also support lifecycle methods for handling side effects.</p><p id="09cfcacf-5231-4a58-947b-d62e5e9ae011" class=""><strong>Benefits:</strong></p><ul id="5c9ea8b0-43e4-4103-8273-ff3eb2bfbe20" class="bulleted-list"><li style="list-style-type:disc"><strong>State Management:</strong> Suitable for components that require internal state.</li></ul><ul id="c954f3e1-da27-43c8-9a21-4a43b070e0af" class="bulleted-list"><li style="list-style-type:disc"><strong>Lifecycle Control:</strong> Ability to hook into component lifecycle events.</li></ul><ul id="23ba5fb0-b632-4e69-918c-e7619b633237" class="bulleted-list"><li style="list-style-type:disc"><strong>Complex Logic:</strong> Handling of complex logic and side effects.</li></ul><p id="7664ceee-eadc-4b75-a5b5-592c635b0d34" class=""><strong>Use Cases:</strong></p><ul id="6ee4961a-1646-4b66-adf5-fc0dae8a90ca" class="bulleted-list"><li style="list-style-type:disc">Components with complex state and behavior.</li></ul><ul id="803dd090-22e7-454f-b25f-545f992b3090" class="bulleted-list"><li style="list-style-type:disc">Integration with external APIs or services.</li></ul><hr id="c56df5a7-47e4-4a42-9edb-a009816e1d6d"/><h2 id="4705a6b2-dc70-40b6-9934-461d35298fde" class="">3. Pure Components</h2><p id="2b9f7802-e57a-4661-aa41-e6b411b93daf" class="">Pure Components are similar to Class Components but come with optimizations to automatically handle shouldComponentUpdate checks. They are particularly useful when you want to prevent unnecessary re-renders in your application.</p><p id="8b412198-d5a8-4dce-a2f8-29362d8bd2b5" class=""><strong>Example:</strong></p><pre id="8d1903d7-1911-48f7-a5e3-6af1bdd04451" class="code code-wrap"><code>class PureCounter extends React.PureComponent {
+    constructor() {
+        super();
+        this.state = { count: 0 };
+    }
+
+    render() {
+        return (
+            &lt;div&gt;
+                &lt;p&gt;Count: {this.state.count}&lt;/p&gt;
+                &lt;button
+                    onClick={() =&gt;
+                        this.setState({ count: this.state.count + 1 })
+                    }&gt;
+                    Increment
+                &lt;/button&gt;
+            &lt;/div&gt;
+        );
+    }
+}</code></pre><p id="12759584-3624-4cd7-b120-1a483839e630" class=""><strong>Explanation:</strong></p><p id="6ad48c2c-3397-4574-82f9-fba5b98495be" class="">Pure Components are optimized versions of Class Components. They automatically perform a shallow comparison of props and state to determine if a re-render is necessary. This optimization can reduce unnecessary rendering and improve application performance.</p><p id="d35f9dcc-4d45-464a-a495-9a8ef0f3f0e3" class=""><strong>Benefits:</strong></p><ul id="088b2077-bf2e-4b11-80e8-9b06ce949781" class="bulleted-list"><li style="list-style-type:disc"><strong>Automatic Optimization:</strong> Pure Components handle shouldComponentUpdate checks automatically.</li></ul><ul id="2a26b212-24bc-47bc-8ef4-d5c281c0e12e" class="bulleted-list"><li style="list-style-type:disc"><strong>Performance:</strong> They can prevent unnecessary re-renders in your application.</li></ul><p id="2dd11102-4464-4042-b756-ac3e427fd8e3" class=""><strong>Use Cases:</strong></p><ul id="e92c1a3b-17a2-4498-95bb-e4ae78443c7b" class="bulleted-list"><li style="list-style-type:disc">Components that can benefit from automatic prop and state comparison.</li></ul><ul id="04b03fc6-5ea8-401a-9ccf-070540e78f5f" class="bulleted-list"><li style="list-style-type:disc">When optimizing performance is a concern.</li></ul><hr id="a369ad80-3e62-4e4c-a763-2e47fc76e08d"/><h2 id="d1683536-2c86-4cf5-9640-9fec66463d27" class="">4. Controlled Components</h2><p id="cbe6dd89-562f-414d-bb65-7d8e5308c80b" class="">Controlled Components are a concept often used with form elements. In a controlled component, form elements like input fields and checkboxes are controlled by React state.</p><p id="e82c59ec-886d-4291-a805-7f0b2db082f8" class=""><strong>Example:</strong></p><pre id="b455482e-f33b-4dca-bb4c-fb1612c5cc35" class="code code-wrap"><code>class ControlledInput extends React.Component {
+    constructor() {
+        super();
+        this.state = { inputValue: &#x27;&#x27; };
+    }
+
+    handleChange = (event) =&gt; {
+        this.setState({ inputValue: event.target.value });
+    };
+
+    render() {
+        return (
+            &lt;div&gt;
+                &lt;input
+                    type=&#x27;text&#x27;
+                    value={this.state.inputValue}
+                    onChange={this.handleChange}
+                /&gt;
+                &lt;p&gt;Input Value: {this.state.inputValue}&lt;/p&gt;
+            &lt;/div&gt;
+        );
+    }
+}</code></pre><p id="27116ff4-7df1-4a55-83d9-4b1d4b9b0467" class=""><strong>Explanation:</strong></p><p id="90400c23-59bc-44aa-a14f-37aa6b71c79a" class="">In a controlled component, the value of a form element is controlled by React state. This ensures that the component’s state and the input’s value are always in sync. It allows you to control and validate user input.</p><p id="4a47c3cb-6127-40b9-b241-f854bf839f75" class=""><strong>Benefits:</strong></p><ul id="b18c13f0-48eb-4193-88fd-ac767778ff18" class="bulleted-list"><li style="list-style-type:disc"><strong>Predictable State:</strong> The component’s state and input values are synchronized.</li></ul><ul id="01639c91-d36f-4456-bf8d-4345cecc04c5" class="bulleted-list"><li style="list-style-type:disc"><strong>Validation:</strong> You can easily validate and manipulate user input.</li></ul><p id="1b391d4d-ee7a-493c-a5d6-c41465d28864" class=""><strong>Use Cases:</strong></p><ul id="c7fc3ce0-65d6-4b66-8939-3fc34eeb95dd" class="bulleted-list"><li style="list-style-type:disc">Forms where you want to control and validate user input.</li></ul><ul id="a2628a69-5edd-4f61-87d2-fe5a1f7152e3" class="bulleted-list"><li style="list-style-type:disc">Dynamic form elements that depend on component state.</li></ul><hr id="2c8d4b75-e6ac-40cb-93b9-92a96eee3834"/><h2 id="c297a476-d96c-4e25-b630-717e4e86390b" class="">5. Uncontrolled Components</h2><p id="7030e895-6c3b-4d6b-8512-ebe688cb33b2" class="">Uncontrolled Components are the opposite of controlled components. In uncontrolled components, form elements maintain their state internally, and React does not control their values.</p><p id="ab1d9ae1-d835-4c60-bafd-25700a62cadb" class=""><strong>Example:</strong></p><pre id="b82cc00e-733b-48c5-bb09-52379abbee5c" class="code code-wrap"><code>class UncontrolledInput extends React.Component {
+    inputRef = React.createRef();
+
+    handleSubmit = () =&gt; {
+        alert(`Input Value: ${this.inputRef.current.value}`);
+    };
+
+    render() {
+        return (
+            &lt;div&gt;
+                &lt;input type=&#x27;text&#x27; ref={this.inputRef} /&gt;
+                &lt;button onClick={this.handleSubmit}&gt;Submit&lt;/button&gt;
+            &lt;/div&gt;
+        );
+    }
+}</code></pre><p id="c4c9178d-090d-4cdf-83f1-77b5d70340f4" class=""><strong>Explanation:</strong></p><p id="db61ccc6-1887-4589-a573-e4ce6996a95a" class="">Uncontrolled components allow form elements to maintain their state internally. You can access their values directly through refs, but React does not control or synchronize their values.</p><p id="5453f1fd-6894-42db-b73a-0d2d02c1baee" class=""><strong>Benefits:</strong></p><ul id="10471a3d-3bd4-44b5-8a2a-2db68b65860a" class="bulleted-list"><li style="list-style-type:disc"><strong>Direct Access:</strong> You can access form element values directly through refs.</li></ul><ul id="a9900bd9-a6a2-4f59-b117-b1953b659567" class="bulleted-list"><li style="list-style-type:disc"><strong>Legacy Integration:</strong> Useful when integrating with non-React code or working with legacy components.</li></ul><p id="78d86c45-bc77-47d9-9a02-7623336589c6" class=""><strong>Use Cases:</strong></p><ul id="96f837bb-9ca3-4baf-8817-8ce5f1651315" class="bulleted-list"><li style="list-style-type:disc">Integration with non-React libraries or code.</li></ul><ul id="47387d67-e1bb-4a63-a7f6-c0c0b78fca7d" class="bulleted-list"><li style="list-style-type:disc">Situations where you need direct access to form element values.</li></ul><hr id="b95aef33-58ea-4cac-83ba-09ef6d176a9c"/><h2 id="2d7b704b-3969-4ff0-b8d2-d86096e37a5f" class="">6. Semi-Controlled Components</h2><p id="1c55cce4-5f9b-4b45-b6d3-dbff408af938" class="">Semi-Controlled Components, also known as partially controlled or hybrid components, strike a balance between controlled and uncontrolled components. They allow for some user input control while maintaining internal state.</p><p id="9bc90a9d-8f41-4cb0-a69b-c5154a942070" class=""><strong>Example:</strong></p><pre id="0ae02d03-4b3f-403e-b587-604776a55613" class="code code-wrap"><code>class SemiControlledInput extends React.Component {
+    constructor() {
+        super();
+        this.state = { inputValue: &#x27;&#x27; };
+    }
+
+    handleChange = (event) =&gt; {
+        if (this.state.inputValue.length &lt; 5) {
+            this.setState({ inputValue: event.target.value });
+        }
+    };
+
+    render() {
+        return (
+            &lt;div&gt;
+                &lt;input
+                    type=&#x27;text&#x27;
+                    value={this.state.inputValue}
+                    onChange={this.handleChange}
+                /&gt;
+                &lt;p&gt;Input Value: {this.state.inputValue}&lt;/p&gt;
+            &lt;/div&gt;
+        );
+    }
+}</code></pre><p id="e1ee6fdd-5b6f-4598-b350-a6f3b5c0231b" class=""><strong>Explanation:</strong></p><p id="b2eb8cc6-7578-4eeb-a396-32187fab84ae" class="">Semi-Controlled Components allow for some level of user input control while maintaining internal state. In the example, the input value is controlled unless it reaches a specific length (e.g., 5 characters), after which it becomes uncontrolled.</p><p id="decac097-0389-47f1-91f0-ea5b795097db" class=""><strong>Benefits:</strong></p><ul id="1a3a5620-cab6-4dc4-bf4f-911d1016aca2" class="bulleted-list"><li style="list-style-type:disc"><strong>Flexibility:</strong> You can combine the benefits of controlled and uncontrolled components.</li></ul><ul id="ebd25079-4d03-4f00-b504-751c59ae9c45" class="bulleted-list"><li style="list-style-type:disc"><strong>Custom Logic:</strong> Useful for implementing custom input behavior.</li></ul><p id="00b7a7c0-7574-4f3f-9f5c-ce3143b918ba" class=""><strong>Use Cases:</strong></p><ul id="9fa22ef6-46b1-44a7-9f28-447ebbdf1ad2" class="bulleted-list"><li style="list-style-type:disc">Situations where you need a mix of controlled and uncontrolled behavior.</li></ul><ul id="466e4f8c-cbe9-4d89-8c8e-2cfb00938570" class="bulleted-list"><li style="list-style-type:disc">Implementing custom input validation or behavior.</li></ul><hr id="66f684dc-d93f-4296-83f4-e846d5fd6fa9"/><h2 id="82ef639d-3a82-44a4-ac05-d8de4afa53f6" class="">7. Container Components</h2><p id="2c6a0806-aa13-4331-8c1a-f15e6d99059a" class="">Container Components, also known as smart or stateful components, are responsible for managing application state and data. They often do not render UI themselves but delegate this task to presentational components.</p><p id="d49942da-7c59-44c7-bb8c-4206586e80e9" class=""><strong>Example:</strong></p><pre id="012c183b-3c21-4080-9cc8-0f064394b48f" class="code code-wrap"><code>class UserContainer extends React.Component {
+    constructor() {
+        super();
+        this.state = { users: [] };
+    }
+
+    componentDidMount() {
+        // Fetch user data and update state
+        fetch(&#x27;/api/users&#x27;)
+            .then((response) =&gt; response.json())
+            .then((data) =&gt; this.setState({ users: data }));
+    }
+
+    render() {
+        return &lt;UserList users={this.state.users} /&gt;;
+    }
+}</code></pre><p id="5851dc1c-1bf2-48d5-a03f-219e64ba1eac" class=""><strong>Explanation:</strong></p><p id="2641fc39-a610-4590-8d29-adda7f74e298" class="">Container Components focus on data management and logic. They fetch data, handle side effects, and pass data down to presentational components for rendering. This separation of concerns promotes maintainability.</p><p id="02c6f504-8e9f-425d-8a75-29231a94e4e1" class=""><strong>Benefits:</strong></p><ul id="7320d13d-dab7-42ff-83c6-e206a3f54d42" class="bulleted-list"><li style="list-style-type:disc"><strong>Separation of Concerns:</strong> Clear separation of data management and UI rendering.</li></ul><ul id="599cc771-65ed-46ed-968b-ea7d9b682cf1" class="bulleted-list"><li style="list-style-type:disc"><strong>Reusability:</strong> Presentational components can be reused with different data sources.</li></ul><p id="726587ad-2d96-4aac-b05b-5066a9edb656" class=""><strong>Use Cases:</strong></p><ul id="3a520c78-a8d9-49e0-b733-b5cced9a1f39" class="bulleted-list"><li style="list-style-type:disc">Managing application state and data.</li></ul><ul id="03a03e30-3972-4e54-b80c-06092a4578a7" class="bulleted-list"><li style="list-style-type:disc">Fetching data from APIs or databases.</li></ul><hr id="e47d5707-adaa-4ee5-b36d-69a5b77e320d"/><h2 id="a388c259-d39a-4acc-9bd6-dc9e725d0408" class="">8. Presentational Components</h2><p id="360b3e39-c6f3-4fa3-9ee0-7d434bf78c43" class="">Presentational Components, also known as dumb or stateless components, are responsible for rendering UI elements based on the data and props they receive. They do not manage application state.</p><p id="a4be14f9-d4db-4eff-bde8-7e5319fbe061" class=""><strong>Example:</strong></p><pre id="6d5cc8da-60de-43b8-9e1a-1eafc647e3be" class="code code-wrap"><code>const UserList = ({ users }) =&gt; {
+    return (
+        &lt;ul&gt;
+            {users.map((user) =&gt; (
+                &lt;li key={user.id}&gt;{user.name}&lt;/li&gt;
+            ))}
+        &lt;/ul&gt;
+    );
+};</code></pre><p id="68fb3420-4285-46ea-ae22-42beb69f439d" class=""><strong>Explanation:</strong></p><p id="c09d3632-24cb-4175-aae1-f71020f19372" class="">Presentational Components are purely focused on rendering UI elements based on the data they receive via props. They do not manage state or perform complex logic. This makes them highly reusable and easy to test.</p><p id="b477bac4-7aed-4335-8c69-3c5b4ce0154f" class=""><strong>Benefits:</strong></p><ul id="07f6430c-b8ef-471a-898e-4fb5be7773f7" class="bulleted-list"><li style="list-style-type:disc"><strong>Reusability:</strong> Presentational components can be reused throughout the application.</li></ul><ul id="30c678b7-65b6-4382-8475-ed9515e9738e" class="bulleted-list"><li style="list-style-type:disc"><strong>Testability:</strong> They are easy to test because they have clear input (props) and output (UI).</li></ul><p id="41110058-b101-4aeb-8382-a809fd017e12" class=""><strong>Use Cases:</strong></p><ul id="be53bbf2-9bc0-47fb-b1b7-152b8bfedaa1" class="bulleted-list"><li style="list-style-type:disc">Rendering UI elements based on data.</li></ul><ul id="dc0dab2e-69e1-4d4c-bb2e-1da7d12077f1" class="bulleted-list"><li style="list-style-type:disc">Building reusable UI components.</li></ul><hr id="4eae8415-599b-40ed-b10a-4801d06a3d15"/><h2 id="fe331ad3-4e7c-466e-a8cd-d672deffe2b0" class="">9. Higher-Order Components (HOCs)</h2><p id="8c56fda9-9846-4650-8335-742b9ba53dd4" class="">Higher-Order Components (HOCs) are a design pattern that allows you to reuse component logic. They are functions that take a component as an argument and return an enhanced component with additional behavior.</p><p id="a857daeb-1503-4711-a51f-51488a6d03b6" class=""><strong>Example:</strong></p><pre id="ee0c06b4-14fb-4987-b480-e395143027ea" class="code code-wrap"><code>const withLogger = (WrappedComponent) =&gt; {
+    class Logger extends React.Component {
+        componentDidMount() {
+            console.log(`Component ${WrappedComponent.name} mounted.`);
+        }
+
+        render() {
+            return &lt;WrappedComponent {...this.props} /&gt;;
+        }
+    }
+
+    return Logger;
+};
+
+const EnhancedComponent = withLogger(UserList);</code></pre><p id="77d683b7-6b58-4b44-b8e0-b6ee9599ac52" class=""><strong>Explanation:</strong></p><p id="c0b9c135-dbd8-4288-987d-b35019ef1f04" class="">HOCs are functions that take a component and return a new component with additional behavior or props. They enable the reuse of logic, such as logging, analytics, or authentication, across multiple components.</p><p id="4cf2f881-4ff1-4999-8b44-51cb7cc506a4" class=""><strong>Benefits:</strong></p><ul id="a6b314b5-0711-4850-a916-614587b13ebd" class="bulleted-list"><li style="list-style-type:disc"><strong>Reusability:</strong> Logic can be reused across different components.</li></ul><ul id="b98efe3f-ec6f-462e-ad80-8da0258a683f" class="bulleted-list"><li style="list-style-type:disc"><strong>Separation of Concerns:</strong> Logic is encapsulated in separate HOCs, promoting code organization.</li></ul><p id="83f96690-282a-4fdd-a9d1-453011bc213f" class=""><strong>Use Cases:</strong></p><ul id="29b4cccc-209a-4382-9155-2a1ff1742fdb" class="bulleted-list"><li style="list-style-type:disc">Adding cross-cutting concerns to components (e.g., logging, authentication).</li></ul><ul id="fea095a1-c9bf-482b-867f-2dbb4f8143e4" class="bulleted-list"><li style="list-style-type:disc">Reusing logic across multiple components.</li></ul><hr id="4942e605-29ca-49df-859d-03b630e5cd2c"/><h2 id="7e696c4c-235b-4f96-8102-c6ac4e078407" class="">10. Error Boundaries</h2><p id="5b2349ec-e955-45cf-9952-306bcd60d6e0" class="">Error Boundaries are special components in React that capture errors during rendering and allow you to handle them gracefully instead of crashing the entire application.</p><p id="be0c8309-b2eb-4203-b481-f8dcc4496953" class=""><strong>Example:</strong></p><pre id="c7a2f6d9-c31a-4f60-b662-3b40956406eb" class="code code-wrap"><code>class ErrorBoundary extends React.Component {
+    constructor() {
+        super();
+        this.state = { hasError: false };
+    }
+
+    componentDidCatch(error, info) {
+        this.setState({ hasError: true });
+        // Log the error to an error tracking service
+        logErrorToService(error, info);
+    }
+
+    render() {
+        if (this.state.hasError) {
+            // Render an error message
+            return &lt;p&gt;Something went wrong.&lt;/p&gt;;
+        }
+
+        // Render children normally
+        return this.props.children;
+    }
+}</code></pre><p id="d57dda2e-b978-48b7-9974-d312192ee5c9" class=""><strong>Explanation:</strong></p><p id="d2647232-fa60-41df-8538-572a896d2e9b" class="">Error Boundaries are used to catch errors that occur during rendering, such as in the <code>render</code> method of a component. They prevent these errors from affecting the entire application and allow you to display an error message instead.</p><p id="aa09709a-f99a-4ef2-b70d-d96b6c575340" class=""><strong>Benefits:</strong></p><ul id="c01d288e-0336-4f3f-ab56-2a5a5e10ddba" class="bulleted-list"><li style="list-style-type:disc"><strong>Graceful Error Handling:</strong> Prevents crashes and allows for graceful error handling.</li></ul><ul id="ae42891a-bcfb-490e-96f1-bb0679b198ac" class="bulleted-list"><li style="list-style-type:disc"><strong>Isolation:</strong> Errors in one part of the application don’t affect other parts.</li></ul><p id="a9f21aa9-f136-4f46-a215-e88d30276cfb" class=""><strong>Use Cases:</strong></p><ul id="bc9084be-82f8-418d-9580-7062b88e377f" class="bulleted-list"><li style="list-style-type:disc">Wrapping components or parts of your UI that may encounter errors.</li></ul><ul id="95f03bec-70da-48ed-aa49-2a4f12d50b79" class="bulleted-list"><li style="list-style-type:disc">Logging and reporting errors to improve application stability.</li></ul><hr id="510ae3cc-e9f2-4c64-86b1-b69697c7b64b"/><h2 id="16c6e8ac-e088-46ca-b3c6-5a15b3cba0a4" class="">11. Context API Components</h2><p id="ff911bea-4527-46ae-85af-0c151ab90d23" class="">Context API Components provide a way to share data or state across components without the need for explicit prop drilling. They allow you to create a central store of data that can be accessed by child components.</p><p id="e506980d-b650-46ef-8196-7d1c8b11378a" class=""><strong>Example:</strong></p><pre id="e639ebdc-761b-4c27-ae2d-0415ce7fbd0e" class="code code-wrap"><code>const MyContext = React.createContext();
+
+class MyProvider extends React.Component {
+    state = { data: &#x27;shared data&#x27; };
+
+    render() {
+        return (
+            &lt;MyContext.Provider value={this.state}&gt;
+                {this.props.children}
+            &lt;/MyContext.Provider&gt;
+        );
+    }
+}
+
+const MyConsumerComponent = () =&gt; (
+    &lt;MyContext.Consumer&gt;
+        {(context) =&gt; &lt;p&gt;Shared Data: {context.data}&lt;/p&gt;}
+    &lt;/MyContext.Consumer&gt;
+);</code></pre><p id="7fb31466-d69a-40fc-8ff7-7aec1b0e2dd8" class=""><strong>Explanation:</strong></p><p id="3269f089-24d2-41cd-9281-9cce208163e0" class="">Context API Components allow you to create a central store of data that can be accessed by child components. This eliminates the need to pass data through multiple levels of props and simplifies state management.</p><p id="7f7e8fbe-01c5-489c-981a-8a111b9a7696" class=""><strong>Benefits:</strong></p><ul id="e5c7b181-5f3e-42ea-b993-df45c43f5a4d" class="bulleted-list"><li style="list-style-type:disc"><strong>Simplified State Management:</strong> Reduces prop drilling and simplifies data sharing.</li></ul><ul id="0f86e24f-9ed2-4d65-b969-85c2946e26cc" class="bulleted-list"><li style="list-style-type:disc"><strong>Centralized State:</strong> Provides a single source of truth for data that multiple components can access.</li></ul><p id="c8bab9be-65e2-4ca0-8853-3da695a71ab5" class=""><strong>Use Cases:</strong></p><ul id="8fc40bf4-d742-4bfa-9394-70d6bbd9863e" class="bulleted-list"><li style="list-style-type:disc">Sharing global data, such as user authentication status, theme preferences, or language settings.</li></ul><ul id="76ef7fbe-d4ee-413b-b452-1ff57f60d057" class="bulleted-list"><li style="list-style-type:disc">Avoiding prop drilling in deeply nested component hierarchies.</li></ul><hr id="cee7d9c8-6245-41a1-998d-dd922ffb550e"/><h2 id="94aa6ca1-35fc-453c-8ebb-089edf8af72d" class="">12. Router Components</h2><p id="bd7f4f9b-c520-4497-a3a5-bc6097ea354d" class="">Router Components, often associated with libraries like React Router, enable client-side routing in React applications. They allow you to define routes and control which components are displayed based on the current URL.</p><p id="da632793-267c-4f9c-a05b-9b937830ee76" class=""><strong>Example:</strong></p><pre id="1be6c309-4817-4790-9c79-fd60673ed9cb" class="code code-wrap"><code>import { BrowserRouter as Router, Route, Link } from &#x27;react-router-dom&#x27;;
+
+const Home = () =&gt; &lt;p&gt;Home Page&lt;/p&gt;;
+const About = () =&gt; &lt;p&gt;About Us&lt;/p&gt;;
+
+const App = () =&gt; (
+    &lt;Router&gt;
+        &lt;nav&gt;
+            &lt;ul&gt;
+                &lt;li&gt;
+                    &lt;Link to=&#x27;/&#x27;&gt;Home&lt;/Link&gt;
+                &lt;/li&gt;
+                &lt;li&gt;
+                    &lt;Link to=&#x27;/about&#x27;&gt;About&lt;/Link&gt;
+                &lt;/li&gt;
+            &lt;/ul&gt;
+        &lt;/nav&gt;
+
+        &lt;Route path=&#x27;/&#x27; exact component={Home} /&gt;
+        &lt;Route path=&#x27;/about&#x27; component={About} /&gt;
+    &lt;/Router&gt;
+);</code></pre><p id="9df15732-ce1b-45f3-9562-6f1d875ca351" class=""><strong>Explanation:</strong></p><p id="21b0c137-51d5-443d-bc41-1a2f9751d8bb" class="">Router Components enable client-side navigation by defining routes and rendering specific components based on the URL. They are essential for creating multi-page applications within a single-page application architecture.</p><p id="70ab51f0-2065-42ce-bb4d-990a96ecbc52" class=""><strong>Benefits:</strong></p><ul id="a49c32df-847d-4061-a678-fcf738ad1e17" class="bulleted-list"><li style="list-style-type:disc"><strong>Client-Side Routing:</strong> Enables navigation without full page reloads.</li></ul><ul id="29eede8f-f381-49d0-b150-1dd286681351" class="bulleted-list"><li style="list-style-type:disc"><strong>Code Splitting:</strong> Supports lazy loading and code splitting for improved performance.</li></ul><p id="11ac2400-4431-49a3-a570-09bc51dca7e5" class=""><strong>Use Cases:</strong></p><ul id="400a4819-863e-479e-83e7-ef917d02beac" class="bulleted-list"><li style="list-style-type:disc">Building multi-page applications within a single-page application framework.</li></ul><ul id="12f42600-8727-4ebd-b1c3-0a1be402ea8d" class="bulleted-list"><li style="list-style-type:disc">Navigating between different views or pages.</li></ul><hr id="352a54bd-adfe-403e-9172-a7ef7f8a625a"/><h2 id="e05cf5d7-171a-4ccb-9a25-6c0f483f3d8e" class="">13. Suspense Components</h2><p id="d7ea9dcf-0fce-489b-bbff-02769748fcbc" class="">Suspense Components are part of the React Concurrent Mode feature and provide a way to handle asynchronous operations, such as data fetching or code splitting, while keeping the user interface responsive.</p><p id="3090d2a8-f6bb-4f08-9152-dbb1b439711c" class=""><strong>Example (Data Fetching):</strong></p><pre id="731d666c-a727-4979-9973-eb9f3306dd39" class="code code-wrap"><code>const resource = fetchResource();
+
+const Profile = () =&gt; {
+    const data = resource.read();
+    return &lt;p&gt;{data.name}&lt;/p&gt;;
+};</code></pre><p id="5a6251a4-0afb-4a3b-a61d-91e02ef49f37" class=""><strong>Explanation:</strong></p><p id="3a1fb363-41cb-4598-8e15-f27521ed4d4f" class="">Suspense Components, in conjunction with new React features like <code>createResource</code>, allow you to fetch data asynchronously and display fallback content while waiting for the data to load. This keeps the UI responsive and user-friendly.</p><p id="acdacea7-3935-4153-aed7-8739fabec586" class=""><strong>Benefits:</strong></p><ul id="112b6d77-316a-4683-bb96-675e0ccdab03" class="bulleted-list"><li style="list-style-type:disc"><strong>Improved UX:</strong> Keeps the UI responsive during asynchronous operations.</li></ul><ul id="6a572f30-34a8-4900-a4eb-d871921c7a91" class="bulleted-list"><li style="list-style-type:disc"><strong>Simplified Code:</strong> Reduces the complexity of handling asynchronous operations in React applications.</li></ul><p id="261efd10-35d6-4882-a122-9ce0771fb9f4" class=""><strong>Use Cases:</strong></p><ul id="096027c9-fda5-427f-9620-28c7ace2aa26" class="bulleted-list"><li style="list-style-type:disc">Asynchronously loading data from APIs or other sources.</li></ul><ul id="b3f52f1e-a862-48c1-8097-391b531d9e0e" class="bulleted-list"><li style="list-style-type:disc">Displaying fallback content while waiting for data to load.</li></ul><hr id="ee435e1f-7cb7-4bda-989e-775cc2a4718d"/><h2 id="a55ebe4b-3d8f-46ee-bfdd-9f3938f1e676" class="">14. Render Props Components</h2><p id="eba5d613-9120-47ef-b595-c41fb7953a71" class="">Render Props Components is a pattern where a component’s prop is a function that determines what to render. It enables component composition and code sharing.</p><p id="456bc05f-e5b0-4480-b233-ad897c49138a" class=""><strong>Example:</strong></p><pre id="ca519113-76df-4f58-9442-fdf515e45312" class="code code-wrap"><code>class MouseTracker extends React.Component {
+    state = { x: 0, y: 0 };
+
+    handleMouseMove = (event) =&gt; {
+        this.setState({ x: event.clientX, y: event.clientY });
+    };
+
+    render() {
+        return this.props.render(this.state);
+    }
+}
+
+const App = () =&gt; (
+    &lt;MouseTracker
+        render={({ x, y }) =&gt; (
+            &lt;p&gt;
+                Mouse position: ({x}, {y})
+            &lt;/p&gt;
+        )}
+    /&gt;
+);</code></pre><p id="bf0267f8-7657-4395-a8ac-6cbd281684b1" class=""><strong>Explanation:</strong></p><p id="745555f6-6fd7-4fa2-90d9-e59eb695edd3" class="">Render Props Components pass a function as a prop to determine what content to render. This allows for dynamic content rendering and component composition, making it a versatile pattern.</p><p id="1b9ab948-4605-4b96-8078-d86e541b7f6c" class=""><strong>Benefits:</strong></p><ul id="401863de-5071-4011-abf5-d3046208f7d7" class="bulleted-list"><li style="list-style-type:disc"><strong>Component Composition:</strong> Enables flexible component composition and reuse.</li></ul><ul id="70461952-b519-406b-9fda-f37b608c05cc" class="bulleted-list"><li style="list-style-type:disc"><strong>Props Sharing:</strong> Simplifies sharing props between components.</li></ul><p id="9df415af-f21b-4126-a175-4b282fea6672" class=""><strong>Use Cases:</strong></p><ul id="53264329-762f-4bbc-8667-f93f05c20837" class="bulleted-list"><li style="list-style-type:disc">Creating reusable components that can be customized by different render functions.</li></ul><ul id="aefc3068-8930-48a4-a113-1ae49c152e7c" class="bulleted-list"><li style="list-style-type:disc">Sharing logic and state between components.</li></ul><hr id="ef73b8e1-ee18-47d4-95fb-ccd65e08a0a3"/><h2 id="eb7edcfa-7fbf-4f5c-a1cc-eac751b6857e" class="">15. Function as Children (Render Props)</h2><p id="10e6068c-7d9d-43e3-9f86-74c46187c0c9" class="">Function as Children, also known as Render Props with a different syntax, is a pattern that involves passing a function as a child to a component. This pattern provides more flexibility in rendering content.</p><p id="ba5149f7-312e-417a-86eb-a820017cc9d8" class=""><strong>Example:</strong></p><pre id="92aaf8d8-a750-42e4-800c-af1ec38fa193" class="code code-wrap"><code>class DataFetcher extends React.Component {
+    state = { data: null };
+
+    componentDidMount() {
+        // Simulate data fetching
+        setTimeout(() =&gt; {
+            this.setState({ data: &#x27;Fetched Data&#x27; });
+        }, 2000);
+    }
+
+    render() {
+        return this.props.children(this.state.data);
+    }
+}
+
+const App = () =&gt; &lt;DataFetcher&gt;{(data) =&gt; &lt;p&gt;Data: {data}&lt;/p&gt;}&lt;/DataFetcher&gt;;</code></pre><p id="6c0e4977-5267-4f6b-b1cc-6317da639ac3" class=""><strong>Explanation:</strong></p><p id="86c3be37-7c20-4112-b2c6-6241eadda0a8" class="">Function as Children (FAC) is a variation of the Render Props pattern. It involves passing a function as a child to a component, providing more control over the rendering logic. In this example, the <code>DataFetcher</code> component calls the provided function with the fetched data.</p><p id="b4853c90-d3d3-4469-8fac-d5d76a3b8854" class=""><strong>Benefits:</strong></p><ul id="b96dfa12-78ab-4f61-8967-a5f2b783479e" class="bulleted-list"><li style="list-style-type:disc"><strong>Enhanced Control:</strong> Allows for more flexibility in rendering content.</li></ul><ul id="d178a33d-58aa-4ee5-a28f-45cc800ff80a" class="bulleted-list"><li style="list-style-type:disc"><strong>Dynamic Rendering:</strong> Adapt the rendering logic based on data or conditions.</li></ul><p id="1aada5bd-8aeb-4666-ae7e-765d4632fab5" class=""><strong>Use Cases:</strong></p><ul id="2ed3929f-8a7f-4c2b-87ad-68ea31303e2e" class="bulleted-list"><li style="list-style-type:disc">Creating flexible components that can adapt their rendering behavior.</li></ul><ul id="22db6ca4-9943-4cba-8380-6bb8697e60a7" class="bulleted-list"><li style="list-style-type:disc">Implementing data fetching components with customizable rendering.</li></ul><hr id="2037fba3-71d5-4cfe-aeae-aec3de10859a"/><h2 id="6764c16c-5ddc-4d34-b577-879d589c4df2" class="">16. Memoized Components</h2><p id="bd56d580-fdf4-4beb-a70d-cfd843269b01" class="">Memoized Components, achieved using React’s <code>React.memo</code> Higher-Order Component or the <code>useMemo</code> hook, help optimize component rendering by preventing unnecessary re-renders.</p><p id="aed7bc70-a6e8-4877-a6f2-47324f2293cd" class=""><strong>Example:</strong></p><pre id="67707d3b-f36a-4c16-b8bc-4ad1e8a49672" class="code code-wrap"><code>const MemoizedComponent = React.memo(({ data }) =&gt; &lt;p&gt;Data: {data}&lt;/p&gt;);</code></pre><p id="c2ad33d8-2e64-410e-8654-78eb0b09d53c" class=""><strong>Explanation:</strong></p><p id="69004bcf-a503-4240-8fff-43cc99db5049" class="">Memoized Components are used to prevent re-renders of a component when its props have not changed. This optimization is particularly useful for complex or heavy-rendering components.</p><p id="534cfeb7-d1e7-40bb-a69b-674ec40c924b" class=""><strong>Benefits:</strong></p><ul id="21c4b9ba-0026-4324-88b6-15231d20367b" class="bulleted-list"><li style="list-style-type:disc"><strong>Performance:</strong> Reduces unnecessary re-renders, improving application performance.</li></ul><ul id="770e0677-b2d1-460b-b255-07a9f1e7de3f" class="bulleted-list"><li style="list-style-type:disc"><strong>Simplified Code:</strong> Optimizes components without the need for manual checks.</li></ul><p id="e45d1b49-e10d-4812-927d-0bc5eb206866" class=""><strong>Use Cases:</strong></p><ul id="b5a7a9e2-8334-4606-be3d-d8211c4dbcbb" class="bulleted-list"><li style="list-style-type:disc">Optimizing performance-critical components.</li></ul><ul id="8464c95f-b7a2-4a3a-a247-46cf27cb8de2" class="bulleted-list"><li style="list-style-type:disc">Preventing re-renders of pure presentation components.</li></ul><hr id="f756250e-2b26-4080-a8c6-b29186d5eb26"/><h2 id="208702f9-6695-4c85-9c1f-3d3510e98bb9" class="">17. Hooks</h2><p id="ebf2f90d-d083-4716-a946-c0e07fc1abe2" class="">Hooks are a powerful addition to React that allow you to use state and other React features without writing class components. They provide a more functional way to work with React.</p><p id="61f1079b-a546-4330-aceb-2cbc673e761b" class=""><strong>Example (useState hook):</strong></p><pre id="ad9c8fed-a6b1-412b-891b-88f45d038a67" class="code code-wrap"><code>import React, { useState } from &#x27;react&#x27;;
+
+const Counter = () =&gt; {
+    const [count, setCount] = useState(0);
+
+    return (
+        &lt;div&gt;
+            &lt;p&gt;Count: {count}&lt;/p&gt;
+            &lt;button onClick={() =&gt; setCount(count + 1)}&gt;Increment&lt;/button&gt;
+        &lt;/div&gt;
+    );
+};</code></pre><p id="a1e8fff6-a112-4b1f-9fc6-f46296eeda92" class=""><strong>Explanation:</strong></p><p id="db44706a-082d-43c1-9e5d-eeacf0f399d6" class="">Hooks, introduced in React 16.8, allow you to use state and other React features in functional components. They simplify component logic, reuse, and state management.</p><p id="b2440d4c-7e6f-4200-966a-98734c223f69" class=""><strong>Benefits:</strong></p><ul id="3d069d4b-6927-4237-aaf8-70095a5314c7" class="bulleted-list"><li style="list-style-type:disc"><strong>Functional Components:</strong> Promotes functional components over class components.</li></ul><ul id="7dab3795-df6c-45a4-b1e5-2448f0aeb740" class="bulleted-list"><li style="list-style-type:disc"><strong>Code Reusability:</strong> Encourages the reuse of stateful logic using custom hooks.</li></ul><ul id="78c27744-01bd-41cb-a964-3bb114d275e2" class="bulleted-list"><li style="list-style-type:disc"><strong>Simplified Lifecycle:</strong> Simplifies component lifecycle and side-effect management.</li></ul><p id="9e9cad0f-f74d-4ed2-a5b0-bfa2c0b112df" class=""><strong>Use Cases:</strong></p><ul id="24405c89-d9ab-4128-b77e-6941a80ea063" class="bulleted-list"><li style="list-style-type:disc">Building components with state and side effects in functional components.</li></ul><ul id="cda6c433-6009-4ba6-b85f-9b0d01deeb8e" class="bulleted-list"><li style="list-style-type:disc">Reusing stateful logic across different components using custom hooks.</li></ul><hr id="81f25df6-2c92-42d1-9d77-ca95eae02220"/><h2 id="8ec4885f-35ce-4de6-bfcb-7b428346ad4f" class="">18. Portals</h2><p id="3f92e33d-6207-4ab3-990c-b27075547ccd" class="">Portals in React provide a way to render children into a different part of the DOM hierarchy, outside the parent component. They are useful for cases where you need to render content outside the normal component hierarchy.</p><p id="3cc97c0e-b5cd-488a-aef6-db64f96ddba6" class=""><strong>Example:</strong></p><pre id="1954cce7-f090-4ae8-bd4b-2406d7feddf1" class="code code-wrap"><code>class PortalDemo extends React.Component {
+    render() {
+        return ReactDOM.createPortal(
+            &lt;div className=&#x27;portal&#x27;&gt;
+                &lt;p&gt;This is a portal!&lt;/p&gt;
+            &lt;/div&gt;,
+            document.getElementById(&#x27;portal-root&#x27;)
+        );
+    }
+}</code></pre><p id="53921616-2b14-4010-87e0-8205dd62f43f" class=""><strong>Explanation:</strong></p><p id="b72d4e2d-d3c3-4234-9244-d24e6b3e1196" class="">Portals allow you to render components and content outside their parent component’s DOM structure. This is helpful for use cases like modals, tooltips, or overlays where you want to render content at a different DOM location.</p><p id="08315fa5-a057-4ddc-813a-a3f130e90d94" class=""><strong>Benefits:</strong></p><ul id="6324c5f7-fb32-425d-930e-69c4ff318485" class="bulleted-list"><li style="list-style-type:disc"><strong>Improved UI:</strong> Enables rendering content outside the normal component hierarchy, enhancing UI flexibility.</li></ul><ul id="e9ddf375-fbc3-4ee2-a41d-3b0a1eb3965d" class="bulleted-list"><li style="list-style-type:disc"><strong>Layering:</strong> Useful for creating overlays, modals, and popups that don’t interfere with the layout.</li></ul><p id="2860fdcf-3807-4045-ac34-8a4b9172f52c" class=""><strong>Use Cases:</strong></p><ul id="8d9ece00-fb9c-46d6-8221-db11ca8a6b04" class="bulleted-list"><li style="list-style-type:disc">Modals, dialogs, and popovers.</li></ul><ul id="d11d3f89-f128-4d34-94c9-6b0742508749" class="bulleted-list"><li style="list-style-type:disc">Overlay components that should be visually separate from the main content.</li></ul><hr id="3f5480f8-061e-4551-875f-ddd1ad20daec"/><h2 id="b1042972-46bb-40f2-abf9-c851b821cb3a" class="">19. Lazy Loading</h2><p id="58862e1e-30cb-47b3-bd27-f711b6416183" class="">Lazy Loading is a technique that defers the loading of non-essential assets or components until they are actually needed. This can significantly improve the initial load time of a web application.</p><p id="ad883487-4489-48b5-867d-8becbcdc15c5" class=""><strong>Example (React Suspense with lazy loading):</strong></p><pre id="5e235052-19b5-4ec3-bf39-a087508e85ba" class="code code-wrap"><code>const MyLazyComponent = React.lazy(() =&gt; import(&#x27;./MyComponent&#x27;));
+
+const App = () =&gt; (
+    &lt;div&gt;
+        &lt;Suspense fallback={&lt;p&gt;Loading...&lt;/p&gt;}&gt;
+            &lt;MyLazyComponent /&gt;
+        &lt;/Suspense&gt;
+    &lt;/div&gt;
+);</code></pre><p id="709dd6d6-8802-4eeb-998a-16ab7840af49" class=""><strong>Explanation:</strong></p><p id="b317e859-a9d8-4f65-b5fe-40104eaab24e" class="">Lazy Loading is particularly useful for improving performance by loading components, routes, or assets only when they are required. In React, you can use the <code>React.lazy</code> function in combination with <code>Suspense</code> to achieve lazy loading.</p><p id="2863b627-e9a2-4212-94d3-a514e85830ce" class=""><strong>Benefits:</strong></p><ul id="69ab4172-7360-4b87-a241-8d93596718f2" class="bulleted-list"><li style="list-style-type:disc"><strong>Faster Initial Load:</strong> Reduces the initial load time of web applications.</li></ul><ul id="30a6084d-181d-444a-a43c-91b996a2a4b5" class="bulleted-list"><li style="list-style-type:disc"><strong>Optimized User Experience:</strong> Loads components or content on-demand, improving user experience.</li></ul><p id="b200edab-b0ca-4aa7-93ee-2218780e5af8" class=""><strong>Use Cases:</strong></p><ul id="8ce476da-e697-4aef-9fcc-9dbb02813ec9" class="bulleted-list"><li style="list-style-type:disc">Loading heavy components or libraries only when they are needed.</li></ul><ul id="b6f4d464-14df-4620-a944-c184a04e4abd" class="bulleted-list"><li style="list-style-type:disc">Reducing the initial bundle size of a web application.</li></ul><hr id="c6fc6935-087c-49e0-8ecf-c0049a7265c4"/><h2 id="8f445157-1971-4f11-af1f-5c7b95fbcd77" class="">20. Fragments</h2><p id="ecd014b9-199c-46b4-a051-bb59a8f01769" class="">Fragments in React allow you to group multiple children without adding extra nodes to the DOM. They are useful for structuring and organizing component output.</p><p id="f9a3e276-ea10-4c98-a11e-097f92419878" class=""><strong>Example:</strong></p><pre id="645771fa-f61a-40e1-ae3a-fad48c6dd635" class="code code-wrap"><code>const App = () =&gt; (
+    &lt;&gt;
+        &lt;Header /&gt;
+        &lt;main&gt;
+            &lt;Article /&gt;
+            &lt;Sidebar /&gt;
+        &lt;/main&gt;
+        &lt;Footer /&gt;
+    &lt;/&gt;
+);</code></pre><p id="1fe9073c-6f2c-4134-b573-36242b05d05f" class=""><strong>Explanation:</strong></p><p id="1c1a1b7b-1616-473f-8e99-e7ebc014d20e" class="">Fragments are a lightweight way to group multiple elements without introducing unnecessary parent nodes in the DOM. They improve code readability and maintainability.</p><p id="02b61aa3-0308-4b01-beb4-4466a49b09d8" class=""><strong>Benefits:</strong></p><ul id="91e34d86-0309-4f0f-9eab-20b4d34ef77c" class="bulleted-list"><li style="list-style-type:disc"><strong>Cleaner DOM:</strong> Eliminates additional wrapping elements in the rendered output.</li></ul><ul id="4aaedf7a-793e-47fd-9c75-8cb0dbff1b71" class="bulleted-list"><li style="list-style-type:disc"><strong>Improved Code Organization:</strong> Enhances component structure and readability.</li></ul><p id="aff73582-2297-46b6-9f32-51006b22b345" class=""><strong>Use Cases:</strong></p><ul id="b570836e-6382-44ec-baca-a1a63b095404" class="bulleted-list"><li style="list-style-type:disc">Grouping elements or components without adding extra DOM nodes.</li></ul><ul id="dae0f313-6d12-4dac-830f-c764e93fd7a4" class="bulleted-list"><li style="list-style-type:disc">Structuring the layout of a component or page.</li></ul><hr id="00369f2b-74a7-49bd-b866-1441e6cc3ee1"/><h2 id="2e0a5aa7-dc71-429a-890c-5d11d94f26d5" class="">21. Custom Hooks</h2><p id="633cf1b8-2025-48ff-9040-b7b5f9572986" class="">Custom Hooks are functions that allow you to reuse logic across different components. They enable you to extract and share stateful logic in a composable and reusable way.</p><p id="2e498f74-de14-4152-9a3d-4a6bc9685eae" class=""><strong>Example:</strong></p><pre id="772472e5-c1ed-4752-a399-5ea717672920" class="code code-wrap"><code>const useLocalStorage = (key, initialValue) =&gt; {
+    const [value, setValue] = useState(() =&gt; {
+        const storedValue = localStorage.getItem(key);
+        return storedValue ? JSON.parse(storedValue) : initialValue;
+    });
+
+    useEffect(() =&gt; {
+        localStorage.setItem(key, JSON.stringify(value));
+    }, [key, value]);
+
+    return [value, setValue];
+};</code></pre><p id="71cf39c1-2f12-4eb7-a4ab-4b5ac02d1cac" class=""><strong>Explanation:</strong></p><p id="6ee80e0d-4cb7-4b11-9d42-633b119c4b03" class="">Custom Hooks are a powerful way to encapsulate and share stateful logic among different components. In this example, <code>useLocalStorage</code> provides a reusable hook for managing values in local storage.</p><p id="b6b1f8cc-5fd9-4ecf-99f0-331d6c85d1da" class=""><strong>Benefits:</strong></p><ul id="4131011f-0d85-4423-adf0-d76419fdae78" class="bulleted-list"><li style="list-style-type:disc"><strong>Code Reusability:</strong> Encapsulate and reuse complex logic across components.</li></ul><ul id="ce7687b9-72bf-43f6-b4bf-764e96573cf3" class="bulleted-list"><li style="list-style-type:disc"><strong>Composability:</strong> Combine multiple custom hooks to build feature-rich components.</li></ul><p id="71966653-d5df-4f71-a1fa-9aee2bfa64f1" class=""><strong>Use Cases:</strong></p><ul id="5b0c9a13-59ef-482b-9b64-096d3fbcd746" class="bulleted-list"><li style="list-style-type:disc">Abstracting common functionality, such as form handling, data fetching, or local storage management.</li></ul><ul id="95e955cf-af40-4125-8704-7da8dc9f7577" class="bulleted-list"><li style="list-style-type:disc">Sharing complex logic across different parts of an application.</li></ul><hr id="5803c45e-e59b-4c1d-aae6-519bafac32f8"/><h2 id="b8ed6a84-0b7c-403d-bd99-e7a4bf1dd9de" class="">Conclusion
+</h2><p id="0792d82d-b619-486c-8785-d9e3ed5b00f8" class="">In this exploration of React concepts and patterns, we&#x27;ve covered the fundamental building blocks of React components, from Functional to Class Components. Beyond the basics, we&#x27;ve dived into a plethora of advanced concepts and patterns, including Hooks, Portals, Lazy Loading, and Custom Hooks.</p><p id="4e7c99d0-4f56-4358-9812-d5114fd18abd" class="">By mastering these React tools, you&#x27;re well-equipped to create modern web applications efficiently and provide exceptional user experiences. So, embrace React&#x27;s versatility, experiment, and elevate your development skills.</p></div></article></body></html>
